@@ -15,7 +15,7 @@ export class Template {
   constructor (data) {
     this.data = data
     if (!data.content) {
-      data.content = '暂无更多~'
+      data.content = '暂无信息~'
     }
     this.info = {
       ToUserName: `<![CDATA[${data.FromUserName}]]>`,

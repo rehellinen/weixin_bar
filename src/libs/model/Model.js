@@ -47,6 +47,28 @@ export class Model {
   }
 
   /**
+   * 获取所有数据
+   * @param condition Array 查询条件
+   * @param relation String 关联的模型名称
+   * @param order Array 设置排序的字段
+   * @return {Promise<*>}
+   */
+  async getOne ({condition = {}, relation = [], order = ['id']}) {
+    let data
+    let model = this.model.forge()
+
+    this._processCondition(model, condition)
+    this._processOrder(model, order)
+
+    data = await model.fetch({withRelated: relation})
+
+    if (!data) {
+      throw new DatabaseException()
+    }
+    return data.serialize()
+  }
+
+  /**
    * 根据id获取数据
    * @param id int 数据的ID
    * @param condition Object 要查询的数据的条件

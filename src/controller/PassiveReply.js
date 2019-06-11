@@ -18,6 +18,7 @@ const readAsync = promisify(fs.readFile)
 export class PassiveReply {
   // 微信公众号验证
   static async validation (ctx) {
+    // 验证签名
     const token = $config.TOKEN
     const {signature, timestamp, nonce, echostr} = ctx.query
     const str = [token, timestamp, nonce].sort().join('')
@@ -28,17 +29,17 @@ export class PassiveReply {
 
   // 微信公众号被动回复
   static async passiveReply (ctx) {
+    // 验证签名
     const token = $config.TOKEN
     const {signature, timestamp, nonce, echostr} = ctx.query
     const str = [token, timestamp, nonce].sort().join('')
     const shaRes = sha1(str)
-
     if (shaRes !== signature) {
       ctx.body = 'fail'
       return
     }
 
-    // req 相关
+    // 获取req中的信息
     const reqDataXml = await getRawBody(ctx.req, {
       length: ctx.length,
       limit: '1mb',
@@ -46,16 +47,13 @@ export class PassiveReply {
     })
     const content = parseXML(reqDataXml)
     ctx.wechat = formatMessage(content.xml)
-    console.log(ctx.wechat)
-    reply(ctx)
 
-    // res 相关
+    // 被动回复逻辑
+    await reply(ctx)
+
+    // 生成res
     const xml = new Template(ctx.wechat).get()
     ctx.type = types.xml
     ctx.body = xml
-  }
-
-  static async file (ctx) {
-    ctx.body = 'bTR3G8h36rV3qShu'
   }
 }
