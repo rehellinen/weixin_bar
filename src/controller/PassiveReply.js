@@ -48,7 +48,7 @@ export class PassiveReply {
     const content = parseXML(reqDataXml)
     ctx.wechat = formatMessage(content.xml)
 
-    // 被动回复逻辑
+    // 生成被动回复所需的数据
     await reply(ctx)
 
     // 生成res
