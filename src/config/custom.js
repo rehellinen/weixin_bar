@@ -28,7 +28,8 @@ export default {
   },
   MSG_TYPE: {
     TEXT: 'text',
-    EVENT: 'event'
+    EVENT: 'event',
+    IMAGE: 'image'
   },
   EVENT_TYPE: {
     SUBSCRIBE: 'subscribe',
